@@ -1,13 +1,12 @@
 app "day-1"
     packages { pf: "examples/cli/cli-platform/main.roc" }
-    imports [pf.Task.{Task}, Aoc]
+    imports [Aoc]
     provides [main] to pf
 
-main = Aoc.dayProgram { parse, part1, part2 }
+main = Aoc.solveDay { day: 1, parse, part1, part2 }
 
-parse : Task (List (List U32)) _ _
-parse =
-    inputStr <- Task.map (Aoc.readDailyInput 1)
+parse : Str -> List (List U32)
+parse = \inputStr ->
     groups <- List.map (Str.split inputStr "\n\n")
 
     Str.split groups "\n"
