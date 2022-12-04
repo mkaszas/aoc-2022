@@ -1,5 +1,5 @@
 app "day-3"
-    packages { pf: "examples/cli/cli-platform/main.roc" }
+    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
     imports [Aoc, Util]
     provides [main] to pf
 
@@ -41,7 +41,7 @@ sacksToGroups = \sacks ->
     List.map sacks (\Sack l1 l2 -> List.concat l1 l2)
         |> Util.groupsOf 3
 
-findCommonInAll : List (List a) -> Result a _
+findCommonInAll : List (List a) -> Result a _ | a has Eq
 findCommonInAll = \lists ->
     compList <- Result.try (List.first lists)
     element <- List.findFirst compList

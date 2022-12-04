@@ -1,5 +1,5 @@
 app "day-2"
-    packages { pf: "examples/cli/cli-platform/main.roc" }
+    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
     imports [Aoc]
     provides [main] to pf
 
@@ -26,7 +26,7 @@ parseGame = \gameStr ->
     Ok { opp, me }
 
 
-parseSymbol : Str -> Result Symbol [BadSymbol]*
+parseSymbol : Str -> Result Symbol [BadSymbol]
 parseSymbol = \s ->
     when s is
         "A" | "X" -> Ok Rock

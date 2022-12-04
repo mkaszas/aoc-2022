@@ -1,5 +1,5 @@
 app "day-1"
-    packages { pf: "examples/cli/cli-platform/main.roc" }
+    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
     imports [Aoc]
     provides [main] to pf
 
