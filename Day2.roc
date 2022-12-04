@@ -36,10 +36,6 @@ parseSymbol = \s ->
         "C" | "Z" -> Ok Scissors
         _ -> Err BadSymbol
 
-# score:
-# 1 for Rock, 2 for Paper, and 3 for Scissors
-# + 0 if you lost, 3 if the round was a draw, and 6 if you won.
-
 part1 : List Game -> Str
 part1 = \games ->
     List.map games score
@@ -56,22 +52,13 @@ score = \{ opp, me } ->
             Scissors -> 3
 
     gameResult =
-        when opp is
-            Rock ->
-                when me is
-                    Rock -> Draw
-                    Paper -> Win
-                    Scissors -> Lose
-            Paper ->
-                when me is
-                    Rock -> Lose
-                    Paper -> Draw
-                    Scissors -> Win
-            Scissors ->
-                when me is
-                    Rock -> Win
-                    Paper -> Lose
-                    Scissors -> Draw
+        if me == opp then
+            Draw
+        else if me == next opp then
+            Win
+        else
+            Lose
+
     gameScore =
         when gameResult is
             Lose -> 0
@@ -80,7 +67,12 @@ score = \{ opp, me } ->
 
     mySymbol + gameScore
 
-
+next : Symbol -> Symbol
+next = \s ->
+    when s is
+        Rock -> Paper
+        Paper -> Scissors
+        Scissors -> Rock
 
 parse2 : Str -> List GameOutcome
 parse2 = \str ->
@@ -106,22 +98,10 @@ parseOutcome = \s ->
         _ -> Err BadOutcome
 
 handFromOutcome = \{ opp, outcome } ->
-    when opp is
-        Rock ->
-            when outcome is
-                Win -> Paper
-                Draw -> Rock
-                Lose -> Scissors
-        Paper ->
-            when outcome is
-                Win -> Scissors
-                Draw -> Paper
-                Lose -> Rock
-        Scissors ->
-            when outcome is
-                Win -> Rock
-                Draw -> Scissors
-                Lose -> Paper
+    when outcome is
+        Win -> next opp
+        Draw -> opp
+        Lose -> next (next opp)
 
 part2 : List GameOutcome -> Str
 part2 = \outcomes ->
