@@ -17,7 +17,7 @@ part1 : List (List U32) -> Str
 part1 = \input ->
     List.map input List.sum
         |> List.max
-        |> Result.withDefault 112
+        |> Result.withDefault 0
         |> Num.toStr
 
 
