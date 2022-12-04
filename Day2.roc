@@ -1,5 +1,5 @@
 app "day-2"
-    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
+    packages { pf: "../basic-cli/src/main.roc" }
     imports [Aoc]
     provides [main] to pf
 
@@ -11,20 +11,19 @@ Game : { opp : Symbol, me : Symbol }
 parse : Str -> List Game
 parse = \str ->
     Str.split str "\n"
-        |> List.keepOks parseGame
-
+    |> List.keepOks parseGame
 
 parseGame : Str -> Result Game _
 parseGame = \gameStr ->
     when Str.split gameStr " " is
-        [ oppStr, meStr ] ->
+        [oppStr, meStr] ->
             opp <- Result.try (parseSymbol oppStr)
             me <- Result.try (parseSymbol meStr)
 
             Ok { opp, me }
+
         _ ->
             Err BadGameFormat
-
 
 parseSymbol : Str -> Result Symbol [BadSymbol]
 parseSymbol = \s ->
@@ -37,9 +36,8 @@ parseSymbol = \s ->
 part1 : List Game -> Str
 part1 = \games ->
     List.map games score
-        |> List.sum
-        |> Num.toStr
-
+    |> List.sum
+    |> Num.toStr
 
 score : Game -> U32
 score = \{ opp, me } ->
@@ -66,17 +64,15 @@ next = \s ->
         Paper -> Scissors
         Scissors -> Rock
 
-
 convertOutcome = \{ opp, me } ->
     when me is
         Rock -> next (next opp)
         Paper -> opp
         Scissors -> next opp
 
-
 part2 : List Game -> Str
 part2 = \games ->
-    List.map games (\oc -> { oc & me: (convertOutcome oc) })
-        |> List.map score
-        |> List.sum
-        |> Num.toStr
+    List.map games (\oc -> { oc & me: convertOutcome oc })
+    |> List.map score
+    |> List.sum
+    |> Num.toStr

@@ -1,17 +1,16 @@
 app "day-3"
-    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
+    packages { pf: "../basic-cli/src/main.roc" }
     imports [Aoc, Util]
     provides [main] to pf
 
 main = Aoc.solveDay { day: 3, parse, part1, part2 }
-
 
 Sack : [Sack (List U32) (List U32)]
 
 parse : Str -> List Sack
 parse = \str ->
     Str.split str "\n"
-        |> List.map parseSack
+    |> List.map parseSack
 
 parseSack : Str -> Sack
 parseSack = \s ->
@@ -26,20 +25,18 @@ scalarToScore : U32 -> U32
 scalarToScore = \n ->
     if n >= 97 then n - 96 else n - 38
 
-
 commonItem : Sack -> Result U32 _
 commonItem = \Sack l1 l2 ->
     List.findFirst l1 (\s -> List.contains l2 s)
 
 part1 = \sacks ->
     List.keepOks sacks commonItem
-        |> List.sum
-        |> Num.toStr
-
+    |> List.sum
+    |> Num.toStr
 
 sacksToGroups = \sacks ->
     List.map sacks (\Sack l1 l2 -> List.concat l1 l2)
-        |> Util.groupsOf 3
+    |> Util.groupsOf 3
 
 findCommonInAll : List (List a) -> Result a _ | a has Eq
 findCommonInAll = \lists ->
@@ -52,6 +49,6 @@ findCommonInAll = \lists ->
 
 part2 = \sacks ->
     sacksToGroups sacks
-        |> List.keepOks findCommonInAll
-        |> List.sum
-        |> Num.toStr
+    |> List.keepOks findCommonInAll
+    |> List.sum
+    |> Num.toStr

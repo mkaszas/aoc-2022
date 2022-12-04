@@ -1,5 +1,5 @@
 app "day-1"
-    packages { pf: "../roc_nightly-macos_12_x86_64-2022-11-23-0ac6fe7/examples/cli/cli-platform/main.roc" }
+    packages { pf: "../basic-cli/src/main.roc" }
     imports [Aoc]
     provides [main] to pf
 
@@ -10,21 +10,19 @@ parse = \inputStr ->
     groups <- List.map (Str.split inputStr "\n\n")
 
     Str.split groups "\n"
-        |> List.keepOks Str.toU32
-
+    |> List.keepOks Str.toU32
 
 part1 : List (List U32) -> Str
 part1 = \input ->
     List.map input List.sum
-        |> List.max
-        |> Result.withDefault 0
-        |> Num.toStr
-
+    |> List.max
+    |> Result.withDefault 0
+    |> Num.toStr
 
 part2 : List (List U32) -> Str
 part2 = \input ->
     List.map input List.sum
-        |> List.sortDesc
-        |> List.takeFirst 3
-        |> List.sum
-        |> Num.toStr
+    |> List.sortDesc
+    |> List.takeFirst 3
+    |> List.sum
+    |> Num.toStr
