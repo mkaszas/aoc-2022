@@ -16,14 +16,14 @@ parse = \str ->
 
 parseGame : Str -> Result Game _
 parseGame = \gameStr ->
-    s = Str.split gameStr " "
+    when Str.split gameStr " " is
+        [ oppStr, meStr ] ->
+            opp <- Result.try (parseSymbol oppStr)
+            me <- Result.try (parseSymbol meStr)
 
-    oppStr <- Result.try (List.get s 0)
-    opp <- Result.try (parseSymbol oppStr)
-    meStr <- Result.try (List.get s 1)
-    me <- Result.try (parseSymbol meStr)
-
-    Ok { opp, me }
+            Ok { opp, me }
+        _ ->
+            Err BadGameFormat
 
 
 parseSymbol : Str -> Result Symbol [BadSymbol]
