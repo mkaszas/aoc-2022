@@ -9,9 +9,11 @@ main = Aoc.solveDay { day: 5, parse, part1, part2 }
 # might come back and write a parser, but for now, this is small enough to copy by hand
 startingArrangement =
     [["R", "C", "H"], ["F", "S", "L", "H", "J", "B"], ["Q", "T", "J", "H", "D", "M", "R"], ["J", "B", "Z", "H", "R", "G", "S"], ["B", "C", "D", "T", "Z", "F", "P", "R"], ["G", "C", "H", "T"], ["L", "W", "P", "B", "Z", "V", "N", "S"], ["C", "G", "Q", "J", "R"], ["S", "F", "P", "H", "R", "T", "D", "L"]]
+    |> List.mapWithIndex (\e,i -> T (i + 1) e)
+    |> Dict.fromList
 
 State : { stacks : Stacks, moves : List Move }
-Stacks : List (List Str)
+Stacks : Dict Nat (List Str)
 Move : { quantity : Nat, from : Nat, to : Nat }
 
 parse : Str -> State
@@ -39,21 +41,25 @@ parseMove = \str ->
 makeMove : { moveAll : Bool } -> (Stacks, Move -> Result Stacks _)
 makeMove = \{ moveAll } ->
     \stacks, { quantity, from, to } ->
-        fromStack <- Result.map (List.get stacks (from - 1))
+        fromStack <- Result.map (Dict.get stacks from)
         movedItems = List.takeFirst fromStack quantity
         placedItems = if moveAll then movedItems else List.reverse movedItems
 
-        Util.updateAt stacks (from - 1) (\s -> List.drop s quantity)
-        |> Util.updateAt (to - 1) (\s -> List.concat placedItems s)
+        Dict.update stacks from (Util.updateIfFound (\s -> List.drop s quantity))
+        |> Dict.update to (Util.updateIfFound (\s -> List.concat placedItems s))
 
+part1 : State -> Str
 part1 = \{ stacks, moves } ->
     List.walkTry moves stacks (makeMove { moveAll: Bool.false })
-    |> Result.withDefault []
+    |> Result.withDefault Dict.empty
+    |> Dict.values
     |> List.keepOks List.first
     |> Str.joinWith ""
 
+part2 : State -> Str
 part2 = \{ stacks, moves } ->
     List.walkTry moves stacks (makeMove { moveAll: Bool.true })
-    |> Result.withDefault []
+    |> Result.withDefault Dict.empty
+    |> Dict.values
     |> List.keepOks List.first
     |> Str.joinWith ""

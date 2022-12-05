@@ -1,5 +1,5 @@
 interface Util
-    exposes [groupsOf, updateAt]
+    exposes [groupsOf, updateAt, updateIfFound]
     imports []
 
 groupsOf : List a, Nat -> List (List a)
@@ -31,3 +31,13 @@ updateAt = \list, index, fn ->
         List.concat before (List.prepend (List.dropFirst others) (fn element))
 
     Result.withDefault result list
+
+
+updateIfFound : (a -> a) -> ([Present a, Missing] -> [Present a, Missing])
+updateIfFound = \f ->
+    \element ->
+        when element is
+            Present a ->
+                Present (f a)
+            Missing ->
+                Missing
