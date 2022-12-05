@@ -1,5 +1,5 @@
 interface Util
-    exposes [groupsOf]
+    exposes [groupsOf, updateAt]
     imports []
 
 groupsOf : List a, Nat -> List (List a)
@@ -21,3 +21,13 @@ groupsOf = \list, size ->
                     acc
 
         go list []
+
+updateAt : List a, Nat, (a -> a) -> List a
+updateAt = \list, index, fn ->
+    result =
+        { before, others } = List.split list index
+
+        element <- Result.map (List.first others)
+        List.concat before (List.prepend (List.dropFirst others) (fn element))
+
+    Result.withDefault result list
