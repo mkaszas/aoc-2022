@@ -1,0 +1,5 @@
+# environment
+.env
+
+# binaries from build
+day-*
