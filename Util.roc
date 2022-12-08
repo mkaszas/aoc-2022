@@ -1,5 +1,5 @@
 interface Util
-    exposes [groupsOf, updateAt]
+    exposes [groupsOf, updateAt, splitExclusive]
     imports []
 
 groupsOf : List a, Nat -> List (List a)
@@ -31,3 +31,9 @@ updateAt = \list, index, fn ->
         List.concat before (List.prepend (List.dropFirst others) (fn element))
 
     Result.withDefault result list
+
+splitExclusive : List a, Nat -> { left : List a, right : List a }
+splitExclusive = \list, index ->
+    { before, others } = List.split list index
+
+    { left: before, right: List.dropFirst others }
