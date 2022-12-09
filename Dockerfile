@@ -1,7 +1,7 @@
-FROM debian:stable
-RUN apt update -y && apt upgrade -y && apt install curl fish libasound2 build-essential clang -y
+FROM debian:bookworm-slim
+RUN apt update -y && apt upgrade -y && apt install curl fish hyperfine libasound2 build-essential clang -y
 
-ENV NIGHTLY_VERSION=2022-12-06-c8a335c
+ENV NIGHTLY_VERSION=2022-12-09-234f9f5
 ENV DOWNLOAD_FILE=roc_nightly-linux_x86_64-${NIGHTLY_VERSION}.tar.gz
 
 RUN curl -OL https://github.com/roc-lang/roc/releases/download/nightly/${DOWNLOAD_FILE} \
