@@ -11,7 +11,7 @@ parse : Str -> State
 parse = \s ->
     Str.split s "\n"
     |> List.keepOks parseInstruction
-    |> buildState
+    |> List.walk initState step
 
 parseInstruction : Str -> Result Instruction _
 parseInstruction = \s ->
@@ -22,9 +22,7 @@ parseInstruction = \s ->
 
 State : { pastValues : List I32, drawnPixels : List Str, registerX : I32, drawPosition : U8 }
 
-drawPixel : I32, U8 -> Str
-drawPixel = \xValue, drawPosition ->
-    if Num.abs (xValue - Num.toI32 drawPosition) < 2 then "█" else " "
+initState = { pastValues: [1], drawnPixels: [], registerX: 1, drawPosition: 0 }
 
 step : State, Instruction -> State
 step = \{ pastValues, drawnPixels, registerX, drawPosition }, instruction ->
@@ -45,15 +43,18 @@ step = \{ pastValues, drawnPixels, registerX, drawPosition }, instruction ->
                 drawPosition: Num.rem (drawPosition + 2) 40,
             }
 
-initState = { pastValues: [1], drawnPixels: [], registerX: 1, drawPosition: 0 }
-buildState = \instructions -> List.walk instructions initState step
+drawPixel : I32, U8 -> Str
+drawPixel = \xValue, drawPosition ->
+    if Num.abs (xValue - Num.toI32 drawPosition) < 2 then "█" else " "
 
+part1 : State -> Str
 part1 = \{ pastValues } ->
     [20, 60, 100, 140, 180, 220]
     |> List.keepOks (\c -> List.get pastValues (c - 1) |> Result.map (\x -> x * Num.toI32 c))
     |> List.sum
     |> Num.toStr
 
+part2 : State -> Str
 part2 = \{ drawnPixels } ->
     Util.groupsOf drawnPixels 40
     |> List.map (\s -> Str.joinWith s "")
