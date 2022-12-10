@@ -20,7 +20,7 @@ parseInstruction = \s ->
         ["addx", n] -> Result.map (Str.toI32 n) AddX
         _ -> Err BadInstructionFormat
 
-State : { pastValues: List I32, drawnPixels : List Str, registerX : I32, drawPosition : U8 }
+State : { pastValues : List I32, drawnPixels : List Str, registerX : I32, drawPosition : U8 }
 
 drawPixel : I32, U8 -> Str
 drawPixel = \xValue, drawPosition ->
