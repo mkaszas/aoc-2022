@@ -1,5 +1,5 @@
 interface Util
-    exposes [groupsOf, updateAt, splitExclusive]
+    exposes [groupsOf, updateAt, splitExclusive, applyTimes]
     imports []
 
 groupsOf : List a, Nat -> List (List a)
@@ -37,3 +37,7 @@ splitExclusive = \list, index ->
     { before, others } = List.split list index
 
     { left: before, right: List.dropFirst others }
+
+applyTimes : a, (a -> a), Nat -> a
+applyTimes = \a, f, n ->
+    if n == 0 then a else applyTimes (f a) f (n - 1)
