@@ -1,5 +1,5 @@
 interface Util
-    exposes [groupsOf, updateAt, splitExclusive, applyTimes]
+    exposes [groupsOf, updateAt, splitExclusive, applyTimes, walk2]
     imports []
 
 groupsOf : List a, Nat -> List (List a)
@@ -41,3 +41,9 @@ splitExclusive = \list, index ->
 applyTimes : a, (a -> a), Nat -> a
 applyTimes = \a, f, n ->
     if n == 0 then a else applyTimes (f a) f (n - 1)
+
+walk2 : List a, b, (a, a, b -> b) -> b
+walk2 = \list, state, fn ->
+    when list is
+        [fst, snd, ..] -> walk2 (List.dropFirst list) (fn fst snd state) fn
+        _ -> state
